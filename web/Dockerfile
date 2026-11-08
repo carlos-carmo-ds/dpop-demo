@@ -34,6 +34,8 @@ ENV NODE_ENV=production \
 COPY --from=build --chown=node:node /app/.next/standalone ./
 COPY --from=build --chown=node:node /app/.next/static ./.next/static
 
-USER node
+# UID numérico (usuário "node" = 1000): com "runAsNonRoot" o Kubernetes só aceita a imagem
+# se conseguir provar que o usuário não é root, e um nome ("node") não dá essa garantia.
+USER 1000:1000
 EXPOSE 3000
 CMD ["node", "server.js"]
